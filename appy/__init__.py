@@ -8,18 +8,28 @@
 
 
 class App(object):
-    """ The Application class. All application should inherit from this class
+    """ The Application class. All applications should inherit from this class
     """
     def __init__(self):
         self.daemon = False
 
     def set_daemon(self):
+        """ Sets whether the application should be a daemon process.
+        """
         self.daemon = True
+
+    def start_command_prompt(self):
+        """ Starts the command prompt.
+        """
 
     def start(self):
         """ Start the application. Do not override this method.
         """
-        pass
+        # TODO: Process all the commandline options
+        if self.daemon:
+            self.daemonize()
+        # run the application code
+        self.run()
 
     def run(self):
         """ This is where you should write the application code. Called automatically
