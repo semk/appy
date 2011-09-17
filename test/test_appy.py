@@ -46,21 +46,22 @@ class SampleApplication(appy.App):
         self.do_task()
 
     def run(self):
-        pass
+        while True:
+            self.do_task()
 
 
 class AppyApplicationTestCase(unittest.TestCase):
 
     def setUp(self):
         self.app = SampleApplication()
+        self.app.set_commandline_option('--test')
+        self.start()
 
     def tearDown(self):
         self.app.stop()
 
     def testCommandLine(self):
         self.assertFalse(self.app.test_called)
-        self.app.set_commandline_option('--test')
-        self.app.start()
         self.assertTrue(self.app.test_called)
     
     def testAsyncThread(self):

@@ -19,7 +19,6 @@ class CliParser(object):
     def __init__(self):
         """ This is a BORG pattern.
         """
-        self._parsed = False
         self.__dict__ = self.__shared_state
 
     def parser(self):
@@ -36,14 +35,14 @@ class CliParser(object):
         # add callback
         kwargs['action'] = 'callback'
         kwargs['callback'] = func
-        self._parser().add_option(*args, **kwargs)
+        self.parser().add_option(*args, **kwargs)
 
     def parse(self):
         """ Parse all the commandline arguments.
         """
-        if not self._parsed:
+        if not hasattr(self, '._parsed'):
             self._args, self._options = self.parser().parse_args()
-        self._parsed = True
+            self._parsed = True
 
 
 def option(*args, **kwargs):

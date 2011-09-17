@@ -13,7 +13,7 @@ import sys
 import logging
 import signal
 
-from appy.cli import *
+from cli import CliParser
 
 # Default daemon parameters.
 # File mode creation mask of the daemon.
@@ -131,7 +131,7 @@ class App(object):
         """ Writes the pid to file.
         """
         with open(self.pidfile, 'w') as f:
-            f.write(pid)
+            f.write('%d' %pid)
 
     def stop(self):
         """ Stop the application by raising SIGTERM.
@@ -165,12 +165,3 @@ class App(object):
         by start().
         """
         pass
-
-# TODO: Need to implement the following decorators
-#@appy.logger.log()
-#@appy.async.thread()
-#@appy.async.process()
-#@appy.cli.option()
-#@appy.cli.command()
-#@appy.task()
-#@appy.finish()
