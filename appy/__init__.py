@@ -1,4 +1,4 @@
-#! /usr/bi/env python
+#! /usr/bin/env python
 #
 # Appy: A simple framework that provides all the basic functionalities needed for
 #    simple python applications
@@ -6,12 +6,14 @@
 # @author: Sreejith K
 # Created On 6th Sep 2011
 
+
 from __future__ import with_statement
 import os
 import sys
 import logging
 import signal
 
+from appy.cli import *
 
 # Default daemon parameters.
 # File mode creation mask of the daemon.
@@ -147,11 +149,13 @@ class App(object):
     def start(self):
         """ Start the application. Do not override this method.
         """
-        # TODO: Process all the commandline options
+        # parse the commandline arguments. Does callbacks.
+        CliParser().parse()
+        # daemonize if needed
         if self.daemon:
-            pid = self.daemonize()
-        else:
-            pid = os.getpid()
+            self.daemonize()
+        # write to pidfile
+        pid = os.getpid()
         self.write_pid(pid)
         # run the application code
         self.run()

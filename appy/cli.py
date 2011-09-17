@@ -1,7 +1,6 @@
-#! /usr/bi/env python
+#! /usr/bin/env python
 #
-# Appy: A simple framework that provides all the basic functionalities needed for
-#    simple python applications
+# Decorator for easy commandline options
 #
 # @author: Sreejith K
 # Created On 6th Sep 2011
@@ -12,34 +11,40 @@ from optparse import OptionParser
 
 
 class CliParser(object):
+    """ Commandline parser for the application. Returns a single
+    parser throughout.
+    """
     __shared_state = {}
+
     def __init__(self):
+        """ This is a BORG pattern.
+        """
         self._parsed = False
-        self.__dict__ = __shared_state
+        self.__dict__ = self.__shared_state
 
     def parser(self):
+        """ Creates an OptionParser instance only once.
+        """
         if not hasattr(self, '_parser'):
             self._parser = OptionParser()
         return self._parser
 
     def register_func(self, func, args, kwargs):
-        self.parser().add_option(*args, **kwargs)
-        self._arg_map[func.__name__].append(kwargs['dest'])
+        """ Registers the option with the parser provided by the decorator.
+        Sets the callback function.
+        """
+        # add callback
+        kwargs['action'] = 'callback'
+        kwargs['callback'] = func
+        self._parser().add_option(*args, **kwargs)
 
     def parse(self):
-        self._args, self._options = self.parser().parse_args()
+        """ Parse all the commandline arguments.
+        """
+        if not self._parsed:
+            self._args, self._options = self.parser().parse_args()
         self._parsed = True
 
-    def get_args_for_func(self, func):
-        if not self._parsed:
-            self.parse()
-        func_args = []
-        for opt in dir(self._options):
-            if opt in self._arg_map[func.__name__]:
-                opt = getattr(self._options, opt):
-                func_args.append(opt)
-        return func_args, {}
-        
 
 def option(*args, **kwargs):
     """ This decorator will make sure that the function will be called
@@ -48,9 +53,10 @@ def option(*args, **kwargs):
     def _option(callable):
         # register the commandline options with OptionParser
         CliParser().register_func(callable, args, kwargs)
+        # wrapped function
         @functools.wraps(callable)
-        def __option(*fargs, **fkwargs):
-            fargs, fkwargs = CliParser().get_args_for_func(callable)
-            return callable(*fargs, **fkwargs)
-        retunr __option
+        def __option(self, option, opt_str, value, parser):
+            # call the callback with default arguments
+            return callable(self, option, opt_str, value, parser)
+        return __option
     return _option
