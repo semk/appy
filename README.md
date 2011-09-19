@@ -3,6 +3,8 @@ Appy: A simple framework that provides all the basic functionalities (logging, t
 
 ## Usage
     import appy
+	import appy.async
+	import appy.cli
     from time import sleep
     
     class SampleApplication(appy.App):
@@ -33,6 +35,10 @@ Appy: A simple framework that provides all the basic functionalities (logging, t
             thd = self.do_async_test_thread()
             # this will run asynchronously in a seperate process
             proc = self.do_async_test_process()
+			# wait for the thread to complete its task
+			thd.join()
+			# wait for the process to complete its task
+			proc.join()
     
     if __name__ == '__main__':
         app = Application()
