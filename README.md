@@ -21,20 +21,20 @@ Appy: A simple framework that provides all the basic functionalities (logging, t
             parser.print_help()
 
         @appy.async.thread
-        def do_async_test_thread(self):
+        def do_task_in_thread(self):
             self.do_task()
     
         @appy.async.process
-        def do_async_test_process(self):
+        def do_task_in_process(self):
             self.do_task()
     
         def run(self):
             # directly run the method. blocks till completion
             self.do_task()
             # this will run asynchronously in a seperate thread
-            thd = self.do_async_test_thread()
+            thd = self.do_task_in_thread()
             # this will run asynchronously in a seperate process
-            proc = self.do_async_test_process()
+            proc = self.do_task_in_process()
 			# wait for the thread to complete its task
 			thd.join()
 			# wait for the process to complete its task
