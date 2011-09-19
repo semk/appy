@@ -40,7 +40,7 @@ class CliParser(object):
     def parse(self):
         """ Parse all the commandline arguments.
         """
-        if not hasattr(self, '._parsed'):
+        if not hasattr(self, '_parsed'):
             self._args, self._options = self.parser().parse_args()
             self._parsed = True
 
