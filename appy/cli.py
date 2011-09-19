@@ -53,9 +53,10 @@ def option(*args, **kwargs):
         # register the commandline options with OptionParser
         CliParser().register_func(callable, args, kwargs)
         # wrapped function
+        @staticmethod
         @functools.wraps(callable)
-        def __option(self, option, opt_str, value, parser):
+        def __option(option, opt_str, value, parser):
             # call the callback with default arguments
-            return callable(self, option, opt_str, value, parser)
+            return callable(option, opt_str, value, parser)
         return __option
     return _option

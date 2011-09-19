@@ -3,31 +3,36 @@ Appy: A simple framework that provides all the basic functionalities (logging, t
 
 ## Usage
     import appy
+    from time import sleep
     
-    class Application(appy.App):
+    class SampleApplication(appy.App):
     
-        @appy.cli.option('help', text='Print the help and exit')
-        def help(self):
-            self.print_usage()
-            
-        @appy.cli.option('run', text='Run the application')
-        def run_app(self):
-            self.run()
+        def do_task(self):
+            res = 0
+            for i in range(10):
+                sleep(1)
+                res += i
+            return res
     
-        @appy.async.thread()
-        def do_background_op(self):
-            for num in range(100):
-                print num % 2
+        @appy.cli.option('--test', help='This is a sample commandline option')
+        def test(option, opt_str, value, parser): # NOTE: this is a staticmethod
+            parser.print_help()
+
+        @appy.async.thread
+        def do_async_test_thread(self):
+            self.do_task()
+    
+        @appy.async.process
+        def do_async_test_process(self):
+            self.do_task()
     
         def run(self):
-            print 'app started'
-            status = self.do_background_op()
-            print 'thread running'
-            if status.finished():
-                print 'thread operation completed'
-    
-        def finish(self):
-            print 'application stopped'
+            # directly run the method. blocks till completion
+            self.do_task()
+            # this will run asynchronously in a seperate thread
+            thd = self.do_async_test_thread()
+            # this will run asynchronously in a seperate process
+            proc = self.do_async_test_process()
     
     if __name__ == '__main__':
         app = Application()
@@ -35,17 +40,13 @@ Appy: A simple framework that provides all the basic functionalities (logging, t
 
 If you do,
 
-    python my_app.py help
+    python my_app.py test
 
 It'll show,
 
-    Usage:
-
-    my_app.py:
-        Option          Operation
-        ======          =========
-        help            Print the help and exit
-        run             Run the application
+    Options:
+      -h, --help  show this help message and exit
+      --test      This is a sample commandline option
 
 ## Developer
 
