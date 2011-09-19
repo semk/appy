@@ -16,6 +16,7 @@ setup(
     install_requires=[
     ],
     setup_requires=[],
+    test_suite='test',
     packages=find_packages(exclude=['ez_setup']),
     include_package_data=True,
     zip_safe=True,
