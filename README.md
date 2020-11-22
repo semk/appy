@@ -14,8 +14,8 @@ class SampleApplication(appy.App):
     def do_task(self):
         res = 0
         for i in range(10):
-        sleep(1)
-        res += i
+            sleep(1)
+            res += i
         return res
 
     @appy.cli.option('--test', help='This is a sample commandline option')
@@ -43,7 +43,7 @@ class SampleApplication(appy.App):
         proc.join()
 
 if __name__ == '__main__':
-    app = Application()
+    app = SampleApplication()
     app.start()
 ```
 
